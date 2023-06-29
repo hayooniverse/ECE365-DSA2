@@ -5,6 +5,7 @@
 using namespace std;
 
 void readDict(ifstream& dictFile){
+    
 }
 
 void readInput(ifstream& inputFile){

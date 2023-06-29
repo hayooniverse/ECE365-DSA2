@@ -54,9 +54,14 @@ bool hashTable::contains(const string &key){
 
 // Insert the specified key into the hash table.
 int hashTable::insert(const string &key, void *pv = nullptr){
+
 }
 
-unsigned int getPrime(int size){
+bool hashTable::rehash(){
+    
+}
+
+unsigned int hashTable::getPrime(int size){
     // Uses a precomputed sequence of 17 selected prime numbers.
     unsigned int primes[] = {101,601,1201,2011,3011,5011,10007,15101,30011,50101,75011,100003,150001,500009,750019,1000003,1500007};
 
