@@ -54,11 +54,38 @@ bool hashTable::contains(const string &key){
 
 // Insert the specified key into the hash table.
 int hashTable::insert(const string &key, void *pv = nullptr){
+    
+    int currentPos = findPos(key);
+
+    // Returns 1 if the key already exists in the hash table
+    if(contains(key)){
+        return 1;
+    }
+    // Returns 2 if rehash fails.
+    else if(filled > 0.5*capacity){
+        // Return 2 if rehash fails.
+        if(rehash()==false){
+            return 2;
+        }
+    }
+    // Returns 0 on success.
+    else if(currentPos==-1){
+        data[currentPos].key = key;
+        data[currentPos].isOccupied = true;
+        data[currentPos].isDeleted = false;
+        data[currentPos].pv = pv;
+        filled++;
+
+        return 0;
+    }
+    else{
+        return -1;
+    }
 
 }
 
 bool hashTable::rehash(){
-    
+    return true;
 }
 
 unsigned int hashTable::getPrime(int size){
