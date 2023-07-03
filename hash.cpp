@@ -38,6 +38,7 @@ int hashTable::findPos(const string &key){
             return -1;
         }
     }
+    return -1;
 }
 
 // Check if the specified key is in the hash table.
@@ -53,7 +54,7 @@ bool hashTable::contains(const string &key){
 }
 
 // Insert the specified key into the hash table.
-int hashTable::insert(const string &key, void *pv = nullptr){
+int hashTable::insert(const string &key){
     
     int currentPos = findPos(key);
 
@@ -62,31 +63,34 @@ int hashTable::insert(const string &key, void *pv = nullptr){
         return 1;
     }
     // Returns 2 if rehash fails.
-    else if(filled > 0.5*capacity){
+    if(filled > 0.5*capacity){
         // Return 2 if rehash fails.
         if(rehash()==false){
             return 2;
         }
     }
     // Returns 0 on success.
-    else if(currentPos==-1){
+    if(currentPos == -1){
+        currentPos = hash(key); // Get the initial position to insert the key
+        while(data[currentPos].isOccupied){ // Linear probing to find an empty slot
+            currentPos++;
+            currentPos = currentPos % capacity;
+        }
         data[currentPos].key = key;
         data[currentPos].isOccupied = true;
         data[currentPos].isDeleted = false;
-        data[currentPos].pv = pv;
         filled++;
-
         return 0;
     }
-    else{
-        return -1;
-    }
+    return -1;
 
 }
 
 bool hashTable::rehash(){
+    
     return true;
 }
+
 
 unsigned int hashTable::getPrime(int size){
     // Uses a precomputed sequence of 17 selected prime numbers.

@@ -1,3 +1,13 @@
 {
-    "makefile.makefilePath": "Makefile"
+    "makefile.makefilePath": "Makefile",
+    "makefile.launchConfigurations": [
+        {
+            "cwd": "/Users/hayoonchung/Documents/GitHub/ECE365-DSA2",
+            "binaryPath": "/Users/hayoonchung/Documents/GitHub/ECE365-DSA2/spell.exe",
+            "binaryArgs": []
+        }
+    ],
+    "files.associations": {
+        "iostream": "cpp"
+    }
 }

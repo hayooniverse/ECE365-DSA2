@@ -21,7 +21,7 @@ class hashTable {
   // Returns 0 on success,
   // 1 if key already exists in hash table,
   // 2 if rehash fails.
-  int insert(const std::string &key, void *pv);
+  int insert(const std::string &key);
 
   // Check if the specified key is in the hash table.
   // If so, return true; otherwise, return false.
@@ -60,7 +60,7 @@ class hashTable {
     bool isDeleted;
     void *pv;
 
-    hashItem() = default;
+    hashItem() : isOccupied(false), isDeleted(false), pv(nullptr) {};
   };
 
   int capacity; // The current capacity of the hash table.

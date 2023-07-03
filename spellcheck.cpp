@@ -24,75 +24,104 @@ char validChar(char c){
     else if(c==45 || c== 39){
         return c;
     }
+    else if(c=='\n'){
+        return -2;
+    }
     // Invalid Characters: word separator
     else{
         return -1;
     }
 }
 
-int numLines(ifstream& inputFile){
-    int count = 0;
-    string line;
-    while(getline(inputFile, line)){
-        count++;
-    }
-    return count;
-}
+void loadDictionary(string& dictName, hashTable& dictionary){
+    ifstream dictFile;
+    dictFile.open(dictName);
 
-string readInput(ifstream& inputFile){
-    string word = "";
-    char c = 0;
-    
-    while(c!=EOF){
-        inputFile.get(c);
-        c = validChar(c);
-        if(c==-1){
-            break;
+    if(dictFile.is_open()){
+        string word = "";
+        while(!dictFile.eof()){
+            char c;
+            dictFile.get(c);
+            c = validChar(c);
+            if(c==-1||c==-2){
+                dictionary.insert(word);
+                word.clear();
+            } else{
+                word = word + c;
+            }
         }
-        word = word + c;
+
     }
-    return word;
+    else{
+        cout<<"Failed to load dictionary."<<endl;
+    }
 }
 
-void readDict(ifstream& dictFile){
-    int size = numLines(dictFile);
-    hashTable dictionary(size);
-    for(int i=1;i==50;i++){
-        string word = readInput(dictFile);
-        // dictionary.insert(word);
+void spellcheck(string& inputFileName, string& outputFileName, hashTable& dictionary){
+    ifstream inputFile;
+    ofstream outputFile;
+    inputFile.open(inputFileName);
+    outputFile.open(outputFileName);
+    
+    int count = 1;
+
+    if(inputFile.is_open()){
+        string word = "";
+        while(!inputFile.eof()){
+            char c;
+            inputFile.get(c);
+
+            c = validChar(c);
+            if(c==-1||c==-2){
+                if(word.size()>20){
+                    outputFile<<"Long word at line "<<count<<", starts: "<<word.substr(0,20)<<endl;
+                } else if(!dictionary.contains(word)&&word.size()!=0){
+                    outputFile<<"Unknown word at line "<<count<<": "<<word<<endl;
+                }
+                word.clear();
+                if(c==-2){
+                        count++;
+                }
+            } else{
+                word = word + c;
+            }
+        }
+    } else{
+        cout<<"Failed to load input file."<<endl;
     }
 }
+
 
 int main(){
-
     string dictName, inputFileName, outputFileName;
-    clock_t time;
-    ifstream dictFile, inputFile;
+    clock_t t1, t2;
+    double timeTaken;
 
     // cout<<"Enter name of dictionary: ";
     // cin>>dictName;
     dictName = "sample_dict.txt";
-    dictFile.open(dictName);
+    inputFileName = "lyrics.txt";
+    outputFileName = "output.txt";  
 
-    time = clock();
-    /*insert dictionary loading method*/
-    // string first;
-    
-    cout<<readInput(dictFile)<<endl;
-    cout<<numLines(dictFile)<<endl;
-    // time = clock() - time;
-
-    // cout<<"Total time (in seconds) to load dictionary: " << time / CLOCKS_PER_SEC << endl;
+    t1 = clock();    
+    hashTable dictionary(50000);
+    loadDictionary(dictName, dictionary);
+    t2 = clock();
+    timeTaken = ((double)(t2 - t1)) / CLOCKS_PER_SEC;
+    cout<<"Total time (in seconds) to load dictionary: " << timeTaken << endl;
     // cout<<"Enter name of input file: ";
-    // cin>>inputFileName;    
+    // cin>>inputFileName;
+    
     // cout<<"Enter name of output file: ";
     // cin>>outputFileName;
 
-    // time = clock();
-    // /*insert spell check algorithm*/
-    // time = clock() - time;
 
-    // cout<<"Total time (in seconds) to check document: " << time / CLOCKS_PER_SEC << endl;
+    t1 = clock();
+    spellcheck(inputFileName, outputFileName, dictionary);
+    t2 = clock();
+    timeTaken = ((double)(t2 - t1)) / CLOCKS_PER_SEC;
+
+    cout<<"Total time (in seconds) to check document: " << timeTaken << endl;
 
     return 0;
 }
