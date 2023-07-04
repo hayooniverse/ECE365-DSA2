@@ -87,7 +87,22 @@ int hashTable::insert(const string &key){
 }
 
 bool hashTable::rehash(){
-    
+
+    vector<hashItem> oldData = data;
+    int newCapacity = getPrime(2*capacity);
+
+    // Returns false if memory allocation fails.
+    if(newCapacity == -1){
+        return false;
+    }
+    data.resize(newCapacity);
+
+    for (int i; i<capacity; i++){
+        if(oldData[i].isOccupied && !oldData[i].isDeleted){
+            insert(oldData[i].key);
+        }
+    }
+
     return true;
 }
 
@@ -102,5 +117,6 @@ unsigned int hashTable::getPrime(int size){
             return primes[i];
         }
     }
-    return 1;
+    // Returns -1 if size exceeds maximum prime.
+    return -1;
 }

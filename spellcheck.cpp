@@ -44,7 +44,9 @@ void loadDictionary(string& dictName, hashTable& dictionary){
             dictFile.get(c);
             c = validChar(c);
             if(c==-1||c==-2){
-                dictionary.insert(word);
+                if(dictionary.insert(word)==2){
+                    std::cout<<"Rehash failed."<<endl;
+                }
                 word.clear();
             } else{
                 word = word + c;
@@ -53,7 +55,7 @@ void loadDictionary(string& dictName, hashTable& dictionary){
 
     }
     else{
-        cout<<"Failed to load dictionary."<<endl;
+        std::cout<<"Failed to load dictionary."<<endl;
     }
 }
 
@@ -87,7 +89,7 @@ void spellcheck(string& inputFileName, string& outputFileName, hashTable& dictio
             }
         }
     } else{
-        cout<<"Failed to load input file."<<endl;
+        std::cout<<"Failed to load input file."<<endl;
     }
 }
 
@@ -108,7 +110,7 @@ int main(){
     loadDictionary(dictName, dictionary);
     t2 = clock();
     timeTaken = ((double)(t2 - t1)) / CLOCKS_PER_SEC;
-    cout<<"Total time (in seconds) to load dictionary: " << timeTaken << endl;
+    std::cout<<"Total time (in seconds) to load dictionary: " << timeTaken << endl;
     // cout<<"Enter name of input file: ";
     // cin>>inputFileName;
     
@@ -121,7 +123,7 @@ int main(){
     t2 = clock();
     timeTaken = ((double)(t2 - t1)) / CLOCKS_PER_SEC;
 
-    cout<<"Total time (in seconds) to check document: " << timeTaken << endl;
+    std::cout<<"Total time (in seconds) to check document: " << timeTaken << endl;
 
     return 0;
 }
