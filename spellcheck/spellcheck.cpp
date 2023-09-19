@@ -7,7 +7,7 @@
 
 using namespace std;
 
-char validChar(char c){
+char validChar(char c, bool& numFlag){
     // Valid Characters (Lowercase)
     if(c>=97 && c<=122){
         return c;
@@ -18,6 +18,7 @@ char validChar(char c){
     }
     // Valid Characters (0-9)
     else if(c>=48 && c<=57){
+        numFlag = true;
         return c;
     }
     // Valid Characters (- or ')
@@ -32,65 +33,81 @@ char validChar(char c){
         return -1;
     }
 }
-
 void loadDictionary(string& dictName, hashTable& dictionary){
-    ifstream dictFile;
-    dictFile.open(dictName);
+    ifstream dictFile(dictName);
 
     if(dictFile.is_open()){
         string word = "";
-        while(!dictFile.eof()){
-            char c;
-            dictFile.get(c);
-            c = validChar(c);
-            if(c==-1||c==-2){
-                if(dictionary.insert(word)==2){
-                    std::cout<<"Rehash failed."<<endl;
+        bool numFlag = false;
+        char c;
+
+        while(dictFile.get(c)){
+            c = validChar(c, numFlag);
+            if(c==-1 || c==-2){
+                if(!word.empty() && dictionary.insert(word) == 2){
+                    std::cout << "Rehash failed." << std::endl;
+                    exit(EXIT_FAILURE);
                 }
                 word.clear();
-            } else{
-                word = word + c;
+            } else {
+                word += c;
+            }
+
+            // Process the last word in the dictionary
+            if(dictFile.peek() == EOF && !word.empty()){
+                if(dictionary.insert(word) == 2){
+                    std::cout << "Rehash failed." << std::endl;
+                    exit(EXIT_FAILURE);
+                }
             }
         }
 
-    }
-    else{
-        std::cout<<"Failed to load dictionary."<<endl;
+        dictFile.close();
+    } else {
+        std::cout << "Failed to load dictionary." << std::endl;
     }
 }
 
 void spellcheck(string& inputFileName, string& outputFileName, hashTable& dictionary){
-    ifstream inputFile;
-    ofstream outputFile;
-    inputFile.open(inputFileName);
-    outputFile.open(outputFileName);
+    ifstream inputFile(inputFileName);
+    ofstream outputFile(outputFileName);
     
     int count = 1;
+    char c;
+    string word = "";
+    bool numFlag = false;
 
-    if(inputFile.is_open()){
-        string word = "";
-        while(!inputFile.eof()){
-            char c;
-            inputFile.get(c);
+    while(inputFile.get(c)){
+        c = validChar(c, numFlag);
+        if(c==-1 || c==-2){
+            if(!word.empty() && !numFlag){
+                if(word.size() > 20){
+                    outputFile << "Long word at line " << count << ", starts: " << word.substr(0,20) << endl;
+                } else if(!dictionary.contains(word)){
+                    outputFile << "Unknown word at line " << count << ": " << word << endl;
+                }
+            }
+            word.clear();
+            numFlag = false;
+            if(c==-2){
+                count++;
+            }
+        } else {
+            word += c;
+        }
 
-            c = validChar(c);
-            if(c==-1||c==-2){
-                if(word.size()>20){
-                    outputFile<<"Long word at line "<<count<<", starts: "<<word.substr(0,20)<<endl;
-                } else if(!dictionary.contains(word)&&word.size()!=0){
-                    outputFile<<"Unknown word at line "<<count<<": "<<word<<endl;
-                }
-                word.clear();
-                if(c==-2){
-                        count++;
-                }
-            } else{
-                word = word + c;
+        // Process the last word in the input
+        if(inputFile.peek() == EOF && !word.empty() && !numFlag){
+            if(word.size() > 20){
+                outputFile << "Long word at line " << count << ", starts: " << word.substr(0,20) << endl;
+            } else if(!dictionary.contains(word)){
+                outputFile << "Unknown word at line " << count << ": " << word << endl;
             }
         }
-    } else{
-        std::cout<<"Failed to load input file."<<endl;
     }
+
+    inputFile.close();
+    outputFile.close();
 }
 
 
