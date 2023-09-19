@@ -99,11 +99,11 @@ int main(){
     clock_t t1, t2;
     double timeTaken;
 
-    // cout<<"Enter name of dictionary: ";
-    // cin>>dictName;
-    dictName = "sample_dict.txt";
-    inputFileName = "lyrics.txt";
-    outputFileName = "output.txt";  
+    cout<<"Enter name of dictionary: ";
+    cin>>dictName;
+    // dictName = "sample_dict.txt";
+    // inputFileName = "lyrics.txt";
+    // outputFileName = "output.txt";  
 
     t1 = clock();    
     hashTable dictionary(50000);
@@ -111,11 +111,11 @@ int main(){
     t2 = clock();
     timeTaken = ((double)(t2 - t1)) / CLOCKS_PER_SEC;
     std::cout<<"Total time (in seconds) to load dictionary: " << timeTaken << endl;
-    // cout<<"Enter name of input file: ";
-    // cin>>inputFileName;
+    cout<<"Enter name of input file: ";
+    cin>>inputFileName;
     
-    // cout<<"Enter name of output file: ";
-    // cin>>outputFileName;
+    cout<<"Enter name of output file: ";
+    cin>>outputFileName;
 
 
     t1 = clock();

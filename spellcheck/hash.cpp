@@ -24,6 +24,7 @@ int hashTable::hash(const string &key){
 // Return the position if found, -1 otherwise.
 int hashTable::findPos(const string &key){
     int currentPos = hash(key);
+    int startingPos = currentPos;
 
     while(data[currentPos].isOccupied){
         if(data[currentPos].key == key){
@@ -33,8 +34,7 @@ int hashTable::findPos(const string &key){
         currentPos++;
         // In case it exceeds the capacity
         currentPos = currentPos % capacity;
-        // Returns -1 when item not found
-        if(currentPos == hash(key)){
+        if(currentPos == startingPos){
             return -1;
         }
     }
@@ -95,9 +95,12 @@ bool hashTable::rehash(){
     if(newCapacity == -1){
         return false;
     }
+    data.clear(); // clear current data
     data.resize(newCapacity);
+    filled = 0;    // reset filled counter
+    capacity = newCapacity; // update the capacity to the new value
 
-    for (int i; i<capacity; i++){
+    for (int i=0; i<capacity; i++){
         if(oldData[i].isOccupied && !oldData[i].isDeleted){
             insert(oldData[i].key);
         }
