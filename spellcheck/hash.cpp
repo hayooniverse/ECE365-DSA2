@@ -59,11 +59,15 @@ int hashTable::insert(const string &key){
     int currentPos = findPos(key);
 
     // Returns 1 if the key already exists in the hash table
-    if(contains(key)){
+    // if(contains(key)){
+    //     return 1;
+    // }
+    if(currentPos != -1){
         return 1;
     }
     // Returns 2 if rehash fails.
-    if(filled > 0.5*capacity){
+    // I tested with 0.3, 0.4, 0.5, 0.6, 0.7, and 0.3 took the least time.
+    if(filled > 0.3*capacity){
         // Return 2 if rehash fails.
         if(rehash()==false){
             return 2;
@@ -95,12 +99,13 @@ bool hashTable::rehash(){
     if(newCapacity == -1){
         return false;
     }
+    int oldCapacity = capacity;
     data.clear(); // clear current data
     data.resize(newCapacity);
     filled = 0;    // reset filled counter
     capacity = newCapacity; // update the capacity to the new value
 
-    for (int i=0; i<capacity; i++){
+    for (int i=0; i<oldCapacity; i++){
         if(oldData[i].isOccupied && !oldData[i].isDeleted){
             insert(oldData[i].key);
         }
@@ -111,11 +116,11 @@ bool hashTable::rehash(){
 
 
 unsigned int hashTable::getPrime(int size){
-    // Uses a precomputed sequence of 17 selected prime numbers.
-    unsigned int primes[] = {101,601,1201,2011,3011,5011,10007,15101,30011,50101,75011,100003,150001,500009,750019,1000003,1500007};
+    // Uses a precomputed sequence of 25 selected prime numbers.
+    unsigned int primes[] = {101,601,1201,2011,3011,5011,10007,15101,30011,50101,75011,100003,150001,500009,750019,1000003,1500007,3000017, 6000011, 12000017, 24000001, 48000013, 96000017, 192000011, 384000019};
 
     // Return a prime number at least as large as size.
-    for (int i=0 ; i<17 ;i++){
+    for (int i=0 ; i<25 ;i++){
         if (primes[i]>=size){
             return primes[i];
         }
