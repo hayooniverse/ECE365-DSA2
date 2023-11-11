@@ -104,12 +104,17 @@ int heap::remove(const std::string &id, int *pKey, void *ppData){
 
     // Get the position of the node
     int pos = getPos(pn);
+    // Remember old key
+    int oldKey = pn -> key;
     // Replace the node with the last node in the heap and update the mapping
     mapping.remove(id);
-    data[pos] = data[currentSize--];
+    data[pos] = data[currentSize];
+    currentSize--;
+
+    mapping.setPointer(data[pos].id, &data[pos]);
 
     // Determine whether to percolate up or down
-    if (data[pos].key < pn->key) {
+    if (data[pos].key < oldKey) {
         percolateUp(pos);
     } else {
         percolateDown(pos);

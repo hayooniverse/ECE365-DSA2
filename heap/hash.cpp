@@ -59,9 +59,6 @@ int hashTable::insert(const string &key, void *pv){
     int currentPos = findPos(key);
 
     // Returns 1 if the key already exists in the hash table
-    // if(contains(key)){
-    //     return 1;
-    // }
     if(currentPos != -1){
         return 1;
     }
@@ -108,7 +105,7 @@ bool hashTable::rehash(){
 
     for (int i=0; i<oldCapacity; i++){
         if(oldData[i].isOccupied && !oldData[i].isDeleted){
-            insert(oldData[i].key);
+            insert(oldData[i].key, oldData[i].pv);
         }
     }
 
@@ -135,10 +132,11 @@ int hashTable::setPointer(const std::string &key, void *pv) {
     int pos = findPos(key); 
     
     // Check if the key exists in the hash table
-    if (data[pos].key == key) {
+    if (pos != -1 && data[pos].key == key) {
         // If yes, update the associated pointer
         data[pos].pv = pv;
-        return 0; // Success
+        // Return 0 on success
+        return 0;
     }
     // If not, return 1
     return 1; 
@@ -173,7 +171,6 @@ bool hashTable::remove(const std::string &key) {
         data[pos].isDeleted = true;
         data[pos].key = ""; 
         data[pos].pv = nullptr;
-        --filled;
         return true;
     } 
 
