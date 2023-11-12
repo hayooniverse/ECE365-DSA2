@@ -1,3 +1,5 @@
+// Hailey Hayoon Chung
+
 #include "hash.h"
 
 using namespace std;
@@ -26,7 +28,7 @@ int hashTable::findPos(const string &key){
     int currentPos = hash(key);
     int startingPos = currentPos;
 
-    while(data[currentPos].isOccupied){
+    while(data[currentPos].isOccupied && !data[currentPos].isDeleted){
         if(data[currentPos].key == key){
             return currentPos;
         }
