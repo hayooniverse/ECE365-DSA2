@@ -5,13 +5,15 @@
 
 #include <string>
 #include <list>
-#include "heap.h"  // Your custom heap implementation
-#include "hash.h"  // Your custom hash table implementation
+#include "heap.h"
+#include "hash.h"
 
 class graph {
 public:
+    // The constructor for graph class
     graph();
 
+    // Member function of the class
     void addEdge(const std::string &source, const std::string &destination, int cost);
     bool contains(const std::string &id);
     void applyDijkstra(const std::string &startVertex);
@@ -27,15 +29,17 @@ private:
 
 class graph::node {
     public:
+        node(const std::string &id) : id(id), known(false), minDistance(INT_MAX), previous(nullptr) {}
         std::string id;
         std::list<edge> adjacencyList;
-        bool encountered;
+        bool known;
         int minDistance;
         node *previous;
 };
 
 class graph::edge {
     public:
+        edge(node *destination, int cost) : destination(destination), cost(cost) {}
         node *destination;
         int cost;
 };

@@ -9,25 +9,27 @@
 using namespace std;
 
 int main() {
-    graph graph;
+    
     string fileName, startVertex, outputFilename;
-
+    
     cout<<"Enter name of graph file: ";
     cin>>fileName;
-
     ifstream file(fileName);
     
-    string sourceVertex, destionationVertex;
+    graph graph;   
+   
+    string sourceVertex, destinationVetex;
     int cost;
-
-    while(file >> sourceVertex >> destionationVertex >> cost){
-        graph.addEdge(sourceVertex, destionationVertex, cost);
+    
+    while(file >> sourceVertex >> destinationVetex >> cost){
+        graph.addEdge(sourceVertex, destinationVetex, cost);
     }
 
     // Prompt for the starting vertex
     cout << "Enter name of starting vertex: ";
     cin >> startVertex;
 
+    // The users are reprompted until they enter a valid index
     while(!graph.contains(startVertex)){
         cout<<"Enter name of starting vertex: ";
         cin >> startVertex;
@@ -46,7 +48,7 @@ int main() {
     cout << "Enter name of output file: ";
     cin >> outputFilename;
 
-    // Write the results to the file
+    // Write the results to the output file
     graph.results(outputFilename);
 
     return 0;
